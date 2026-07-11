@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../api/axios.js";
+import api, { assetUrl } from "../api/axios.js";
 import LevelBadge from "../components/LevelBadge.jsx";
 
 export default function Home() {
@@ -28,7 +28,6 @@ export default function Home() {
     loadData();
   }, []);
 
-  // จัดกลุ่ม skill ตาม category ที่ผู้ใช้พิมพ์เอง เช่น Frontend, Backend, Database, Tool, Cyber, Excel ฯลฯ
   const skillsByCategory = skills.reduce((acc, skill) => {
     const key = skill.category || "Other";
     if (!acc[key]) acc[key] = [];
@@ -50,23 +49,18 @@ export default function Home() {
       </section>
 
       <section className="section" id="images">
-        {/* <h2 className="section__title">Gallery</h2> */}
         {loading ? (
           <p className="empty-state">Loading images...</p>
         ) : images.length === 0 ? (
           <p className="empty-state">No images yet. Add some from the admin page.</p>
         ) : (
-          <div className="gallery-grid">
-            {images.map((img) => (
-              <figure className="hero-image">
-                <img
-                  src={images[0].url}
-                  alt={images[0].caption || "portfolio image"}
-                />
-                {images[0].caption && <figcaption>{images[0].caption}</figcaption>}
-              </figure>
-            ))}
-          </div>
+          <figure className="hero-image">
+            <img
+              src={assetUrl(images[0].url)}
+              alt={images[0].caption || "portfolio image"}
+            />
+            {images[0].caption && <figcaption>{images[0].caption}</figcaption>}
+          </figure>
         )}
       </section>
 
