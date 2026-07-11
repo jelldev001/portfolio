@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../api/axios.js";
+import api, { assetUrl } from "../api/axios.js";
 
 const TABS = ["skills", "languages", "images"];
 const SKILL_LEVELS = ["basic", "advanced", "expert"];
@@ -117,13 +117,11 @@ function SkillCrud({ items, onChange }) {
       setError(err.response?.data?.message || "Something went wrong");
     }
   }
-
-  function handleEdit(item) {
+function handleEdit(item) {
     setEditingId(item.id);
-    setName(item.name);
-    setCategory(item.category);
-    setHasLevel(!!item.level);
-    setLevel(item.level || SKILL_LEVELS[0]);
+    setFile(null);
+    setPreview(assetUrl(item.url));
+    setCaption(item.caption || "");
   }
 
   async function handleDelete(id) {
