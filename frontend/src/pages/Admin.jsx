@@ -368,7 +368,7 @@ function ImageCrud({ items, onChange }) {
   function handleEdit(item) {
     setEditingId(item.id);
     setFile(null);
-    setPreview(item.url);
+    setPreview(assetUrl(item.url));
     setCaption(item.caption || "");
   }
 
@@ -414,7 +414,7 @@ function ImageCrud({ items, onChange }) {
       <div className="crud__image-grid">
         {items.map((item) => (
           <div key={item.id} className="crud__image-card">
-            <img src={item.url} alt={item.caption || "image"} />
+          <img src={assetUrl(item.url)} alt={item.caption || "image"} />
             {item.caption && <p>{item.caption}</p>}
             <div className="crud__row-actions">
               <button className="btn btn--small" onClick={() => handleEdit(item)}>
