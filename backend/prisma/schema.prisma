@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// level ไม่บังคับใส่ - ถ้าไม่ระบุจะเป็น null (แสดงแค่ชื่อ ไม่มี badge)
+model Skill {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  category  String   // พิมพ์เอง เช่น "Frontend", "Backend", "Database", "Tool", "Cyber", "Graphic Design", "Excel"
+  level     String?  // "basic" | "advanced" | "expert" | null
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Language {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  level     String?  // "basic" | "advanced" | "native" | null
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Image {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  url       String   // path ของไฟล์ที่ upload เช่น /uploads/xxxx.jpg
+  caption   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
