@@ -416,14 +416,14 @@ function ImageCrud({ items, onChange }) {
       <div className="crud__image-grid">
         {items.map((item) => (
           <div key={item.id} className="crud__image-card">
-            <img src={item.url} alt={item.caption || "image"} />
+         <img src={assetUrl(item.url)} alt={item.caption || "image"} />
             {item.caption && <p>{item.caption}</p>}
             <div className="crud__row-actions">
               <button className="btn btn--small" onClick={() => handleEdit(item)}>
                 Edit
               </button>
               <button
-                className="btn btn--small btn--danger"
+                className="btn btn--small btn--dager"
                 onClick={() => handleDelete(item.id)}
               >
                 Delete
