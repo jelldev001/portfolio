@@ -26,9 +26,10 @@ model Language {
 }
 
 model Image {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  url       String   // path ของไฟล์ที่ upload เช่น /uploads/xxxx.jpg
-  caption   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  url          String
+  cloudinaryId String?
+  caption      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
