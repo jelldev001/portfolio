@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../api/axios.js";
+import api, { assetUrl } from "../api/axios.js";
 
 const TABS = ["skills", "languages", "images"];
 const SKILL_LEVELS = ["basic", "advanced", "expert"];
@@ -57,7 +57,6 @@ export default function Admin() {
   );
 }
 
-// ---------- ตัวเลือก level แบบ optional (ติ๊กก่อนถึงจะเลือก label ได้) ----------
 function OptionalLevelField({ levels, hasLevel, setHasLevel, level, setLevel }) {
   return (
     <label className="field field--level-toggle">
@@ -82,7 +81,6 @@ function OptionalLevelField({ levels, hasLevel, setHasLevel, level, setLevel }) 
   );
 }
 
-// ---------- Skill CRUD: name, category (พิมพ์เอง), level (optional) ----------
 function SkillCrud({ items, onChange }) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
@@ -210,7 +208,6 @@ function SkillCrud({ items, onChange }) {
   );
 }
 
-// ---------- Language CRUD: name, level (optional: basic/advanced/native) ----------
 function LanguageCrud({ items, onChange }) {
   const [name, setName] = useState("");
   const [hasLevel, setHasLevel] = useState(false);
@@ -316,7 +313,6 @@ function LanguageCrud({ items, onChange }) {
   );
 }
 
-// ---------- Image CRUD: upload ไฟล์จากเครื่อง (multipart/form-data) ----------
 function ImageCrud({ items, onChange }) {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
@@ -370,7 +366,7 @@ function ImageCrud({ items, onChange }) {
   function handleEdit(item) {
     setEditingId(item.id);
     setFile(null);
-    setPreview(item.url);
+    setPreview(assetUrl(item.url));
     setCaption(item.caption || "");
   }
 
@@ -416,14 +412,14 @@ function ImageCrud({ items, onChange }) {
       <div className="crud__image-grid">
         {items.map((item) => (
           <div key={item.id} className="crud__image-card">
-         <img src={assetUrl(item.url)} alt={item.caption || "image"} />
+            <img src={assetUrl(item.url)} alt={item.caption || "image"} />
             {item.caption && <p>{item.caption}</p>}
             <div className="crud__row-actions">
               <button className="btn btn--small" onClick={() => handleEdit(item)}>
                 Edit
               </button>
               <button
-                className="btn btn--small btn--dager"
+                className="btn btn--small btn--danger"
                 onClick={() => handleDelete(item.id)}
               >
                 Delete
