@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api, { assetUrl } from "../api/axios.js";
 import LevelBadge from "../components/LevelBadge.jsx";
-
+import { motion } from "framer-motion";
+import HeroCanvas from "../components/HeroCanvas.jsx";
+import ExperienceTimeline from "../components/ExperienceTimeline.jsx";
+const fadeInUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0 },
+};
 export default function Home() {
   const [images, setImages] = useState([]);
   const [skills, setSkills] = useState([]);
@@ -37,7 +43,13 @@ export default function Home() {
 
   return (
     <div className="page home">
-      <section className="hero">
+      <motion.section
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6 }}
+        className="hero">
         <p className="hero__eyebrow">Welcome</p>
         <h1 className="hero__title">
           Building things with <span>code</span>, one skill at a time.
@@ -46,9 +58,16 @@ export default function Home() {
           A quick look at my work, my skills, and the languages I speak &mdash;
           both human and programming.
         </p>
-      </section>
+        {/* <HeroCanvas /> */}
+      </motion.section>
 
-      <section className="section" id="images">
+      <motion.section
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6 }}
+        className="section" id="images">
         {loading ? (
           <p className="empty-state">Loading images...</p>
         ) : images.length === 0 ? (
@@ -62,9 +81,15 @@ export default function Home() {
             {images[0].caption && <figcaption>{images[0].caption}</figcaption>}
           </figure>
         )}
-      </section>
+      </motion.section>
 
-      <section className="section" id="skills">
+      <motion.section
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6 }}
+        className="section" id="skills">
         <h2 className="section__title">Skills</h2>
         {loading ? (
           <p className="empty-state">Loading skills...</p>
@@ -87,9 +112,15 @@ export default function Home() {
             ))}
           </div>
         )}
-      </section>
+      </motion.section>
 
-      <section className="section" id="languages">
+      <motion.section
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6 }}
+        className="section" id="languages">
         <h2 className="section__title">Languages</h2>
         {loading ? (
           <p className="empty-state">Loading languages...</p>
@@ -105,7 +136,9 @@ export default function Home() {
             ))}
           </div>
         )}
-      </section>
+      </motion.section>
+      <ExperienceTimeline />
+
     </div>
   );
 }

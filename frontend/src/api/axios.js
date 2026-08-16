@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const BACKEND_ORIGIN = "https://portfolio-f9r1.onrender.com";
-
+const BACKEND_ORIGIN = import.meta.env.VITE_BACKEND_ORIGIN;
 const api = axios.create({
   baseURL: `${BACKEND_ORIGIN}/api`,
 });
