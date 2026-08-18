@@ -18,6 +18,7 @@ function normalizeLevel(level) {
 router.get("/", async (req, res) => {
   const skills = await prisma.skill.findMany({ orderBy: { createdAt: "asc" } });
   res.json(skills);
+  console.log("skills", skills);
 });
 
 // Admin only - create

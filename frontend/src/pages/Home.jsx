@@ -13,7 +13,7 @@ export default function Home() {
   const [skills, setSkills] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
-
+console.log(skills, languages, images);
   useEffect(() => {
     async function loadData() {
       try {
