@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import api, { assetUrl } from "../api/axios.js";
 import LevelBadge from "../components/LevelBadge.jsx";
 import { motion } from "framer-motion";
-import HeroCanvas from "../components/HeroCanvas.jsx";
 import ExperienceTimeline from "../components/ExperienceTimeline.jsx";
 const fadeInUp = {
   hidden: { opacity: 0, y: 40 },
