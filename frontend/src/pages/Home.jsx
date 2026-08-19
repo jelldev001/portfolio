@@ -13,7 +13,6 @@ export default function Home() {
   const [skills, setSkills] = useState([]);
   const [languages, setLanguages] = useState([]);
   const [loading, setLoading] = useState(true);
-console.log(skills, languages, images);
   useEffect(() => {
     async function loadData() {
       try {
@@ -42,103 +41,115 @@ console.log(skills, languages, images);
   }, {});
 
   return (
-    <div className="page home">
-      <motion.section
-        variants={fadeInUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6 }}
-        className="hero">
-        <p className="hero__eyebrow">Welcome</p>
-        <h1 className="hero__title">
-          Building things with <span>code</span>, one skill at a time.
-        </h1>
-        <p className="hero__subtitle">
-          A quick look at my work, my skills, and the languages I speak &mdash;
-          both human and programming.
-        </p>
-        {/* <HeroCanvas /> */}
-      </motion.section>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.7 }}
+    >
 
-      <motion.section
-        variants={fadeInUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6 }}
-        className="section" id="images">
-        {loading ? (
-          <p className="empty-state">Loading images...</p>
-        ) : images.length === 0 ? (
-          <p className="empty-state">No images yet. Add some from the admin page.</p>
-        ) : (
-          <figure className="hero-image">
-            <img
-              src={assetUrl(images[0].url)}
-              alt={images[0].caption || "portfolio image"}
-            />
-            {images[0].caption && <figcaption>{images[0].caption}</figcaption>}
-          </figure>
-        )}
-      </motion.section>
+      <div className="page home">
+        <div className="hero-container flex flex-col md:flex-row items-center justify-between gap-8">
+          <motion.section
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6 }}
+            className="hero">
+            <p className="hero__eyebrow">Welcome</p>
+            <h1 className="hero__title">
+              Building things with <span>code</span>, one skill at a time.
+            </h1>
+           
+            <p className="hero__subtitle">
+              A quick look at my work, my skills, and the languages I speak &mdash;
+              both human and programming.
+            </p>
+            {/* <HeroCanvas /> */}
+          </motion.section>
 
-      <motion.section
-        variants={fadeInUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6 }}
-        className="section" id="skills">
-        <h2 className="section__title">Skills</h2>
-        {loading ? (
-          <p className="empty-state">Loading skills...</p>
-        ) : skills.length === 0 ? (
-          <p className="empty-state">No skills yet. Add some from the admin page.</p>
-        ) : (
-          <div className="category-groups">
-            {Object.entries(skillsByCategory).map(([category, items]) => (
-              <div className="category-group" key={category}>
-                <h3 className="category-group__title">{category}</h3>
-                <div className="tag-grid">
-                  {items.map((s) => (
-                    <div className="tag-chip" key={s.id}>
-                      <span>{s.name}</span>
-                      <LevelBadge level={s.level} />
-                    </div>
-                  ))}
+          <motion.section
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.6 }}
+            className="section" id="images">
+            {loading ? (
+              <p className="empty-state">Loading images...</p>
+            ) : images.length === 0 ? (
+              <p className="empty-state">No images yet. Add some from the admin page.</p>
+            ) : (
+              <figure className="hero-image">
+                <img
+                  src={assetUrl(images[0].url)}
+                  alt={images[0].caption || "portfolio image"}
+                />
+                {images[0].caption && <figcaption>{images[0].caption}</figcaption>}
+              </figure>
+            )}
+          </motion.section>
+        </div>
+
+
+        <motion.section
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.7 }}
+          className="section" id="skills">
+          <h2 className="section__title">Skills</h2>
+          {loading ? (
+            <p className="empty-state">Loading skills...</p>
+          ) : skills.length === 0 ? (
+            <p className="empty-state">No skills yet. Add some from the admin page.</p>
+          ) : (
+            <div className="category-groups">
+              {Object.entries(skillsByCategory).map(([category, items]) => (
+                <div className="category-group" key={category}>
+                  <h3 className="category-group__title">{category}</h3>
+                  <div className="tag-grid">
+                    {items.map((s) => (
+                      <div className="tag-chip" key={s.id}>
+                        <span>{s.name}</span>
+                        <LevelBadge level={s.level} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </motion.section>
+              ))}
+            </div>
+          )}
+        </motion.section>
 
-      <motion.section
-        variants={fadeInUp}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.6 }}
-        className="section" id="languages">
-        <h2 className="section__title">Languages</h2>
-        {loading ? (
-          <p className="empty-state">Loading languages...</p>
-        ) : languages.length === 0 ? (
-          <p className="empty-state">No languages yet. Add some from the admin page.</p>
-        ) : (
-          <div className="tag-grid">
-            {languages.map((l) => (
-              <div className="tag-chip" key={l.id}>
-                <span>{l.name}</span>
-                <LevelBadge level={l.level} />
-              </div>
-            ))}
-          </div>
-        )}
-      </motion.section>
-      <ExperienceTimeline />
+        <motion.section
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.7 }}
+          className="section" id="languages">
+          <h2 className="section__title">Languages</h2>
+          {loading ? (
+            <p className="empty-state">Loading languages...</p>
+          ) : languages.length === 0 ? (
+            <p className="empty-state">No languages yet. Add some from the admin page.</p>
+          ) : (
+            <div className="tag-grid">
+              {languages.map((l) => (
+                <div className="tag-chip" key={l.id}>
+                  <span>{l.name}</span>
+                  <LevelBadge level={l.level} />
+                </div>
+              ))}
+            </div>
+          )}
+        </motion.section>
+        <ExperienceTimeline />
 
-    </div>
+      </div>
+    </motion.div>
   );
 }

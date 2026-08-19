@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios.js";
-
+import { motion } from "framer-motion";
 export default function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -27,6 +27,12 @@ export default function Login({ onLogin }) {
   }
 
   return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.7 }}
+    >
     <div className="page login">
       <form className="login-card" onSubmit={handleSubmit}>
         <h2 className="section__title">Admin Login</h2>
@@ -56,5 +62,6 @@ export default function Login({ onLogin }) {
         </button>
       </form>
     </div>
+    </motion.div>
   );
 }

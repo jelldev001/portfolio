@@ -1,7 +1,14 @@
 import React from "react";
-
+import { motion } from "framer-motion";
 export default function About() {
   return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.7 }}
+    >
+    
     <div className="page about">
       <section className="section">
         <h2 className="section__title">About</h2>
@@ -16,6 +23,6 @@ export default function About() {
           on the backend, with MongoDB as the database via Prisma ORM.
         </p>
       </section>
-    </div>
+    </div></motion.div>
   );
 }

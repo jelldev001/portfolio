@@ -112,12 +112,12 @@ a {
 }
 
 .section {
-  margin-top: 64px;
+  margin-top: 48px;
 }
 
 .section__title {
   font-size: 1.6rem;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   position: relative;
   padding-left: 18px;
 }
@@ -143,6 +143,24 @@ a {
   padding: 60px 0 20px;
   max-width: 720px;
 }
+.hero-image {
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+  border-radius: 16px;
+  border-bottom: var(--accent)  3px dashed;
+  overflow: hidden;
+}
+
+.hero-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: 50% 30%;
+  border-radius: 16px;
+}
 
 .hero__eyebrow {
   color: var(--accent);
@@ -161,6 +179,10 @@ a {
 }
 
 .hero__title span {
+  color: var(--accent);
+}
+
+.hero__highlight {
   color: var(--accent);
 }
 
