@@ -29,9 +29,10 @@ router.post("/", requireAuth, upload.single("image"), async (req, res) => {
 });
 
 router.put("/:id", requireAuth, upload.single("image"), async (req, res) => {
+  const id = parseInt(req.params.id);
   const { caption } = req.body;
   try {
-    const existing = await prisma.image.findUnique({ where: { id: req.params.id } });
+    const existing = await prisma.image.findUnique({ where: { id: id } });
     if (!existing) return res.status(404).json({ message: "Image not found" });
 
     const data = {};
@@ -44,7 +45,7 @@ router.put("/:id", requireAuth, upload.single("image"), async (req, res) => {
       await deleteFromCloudinary(existing.cloudinaryId);
     }
 
-    const image = await prisma.image.update({ where: { id: req.params.id }, data });
+    const image = await prisma.image.update({ where: { id: id }, data });
     res.json(image);
   } catch (err) {
     console.error("Cloudinary update failed:", err);
@@ -53,11 +54,12 @@ router.put("/:id", requireAuth, upload.single("image"), async (req, res) => {
 });
 
 router.delete("/:id", requireAuth, async (req, res) => {
+  const id = praseInt(req.params.id);
   try {
-    const existing = await prisma.image.findUnique({ where: { id: req.params.id } });
+    const existing = await prisma.image.findUnique({ where: { id:id } });
     if (!existing) return res.status(404).json({ message: "Image not found" });
 
-    await prisma.image.delete({ where: { id: req.params.id } });
+    await prisma.image.delete({ where: { id: id } });
     await deleteFromCloudinary(existing.cloudinaryId);
 
     res.json({ message: "Deleted" });
