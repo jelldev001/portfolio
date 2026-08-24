@@ -54,7 +54,7 @@ router.put("/:id", requireAuth, upload.single("image"), async (req, res) => {
 });
 
 router.delete("/:id", requireAuth, async (req, res) => {
-  const id = praseInt(req.params.id);
+  const id = parseInt(req.params.id);
   try {
     const existing = await prisma.image.findUnique({ where: { id:id } });
     if (!existing) return res.status(404).json({ message: "Image not found" });
