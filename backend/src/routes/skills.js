@@ -39,10 +39,11 @@ router.post("/", requireAuth, async (req, res) => {
 
 // Admin only - update
 router.put("/:id", requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id);
   const { name, category, level } = req.body;
   try {
     const skill = await prisma.skill.update({
-      where: { id: req.params.id },
+      where: { id: id },
       data: {
         ...(name !== undefined ? { name } : {}),
         ...(category !== undefined ? { category } : {}),
@@ -60,8 +61,9 @@ router.put("/:id", requireAuth, async (req, res) => {
 
 // Admin only - delete
 router.delete("/:id", requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id);
   try {
-    await prisma.skill.delete({ where: { id: req.params.id } });
+    await prisma.skill.delete({ where: { id:id } });
     res.json({ message: "Deleted" });
   } catch (err) {
     res.status(404).json({ message: "Skill not found" });
