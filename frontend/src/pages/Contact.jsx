@@ -38,7 +38,7 @@ export default function Contact() {
               Github
             </a>
             <a
-              href="#"
+              href="https://www.facebook.com/share/1EYpoJYdgd/?mibextid=wwXIfr"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-green-200 text-sm font-medium hover:bg-green-100 hover:text-black  transition-colors hover:translate-y-1"
@@ -49,7 +49,7 @@ export default function Contact() {
               Facebook
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/jelly_jus001?igsi=Z3A1Z2JreXF4aGdl&utm_source=qr"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-green-200 text-sm font-medium  hover:bg-green-100 hover:text-black transition-colors hover:translate-y-1"
