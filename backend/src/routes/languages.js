@@ -37,10 +37,11 @@ router.post("/", requireAuth, async (req, res) => {
 
 // Admin only - update
 router.put("/:id", requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id);
   const { name, level } = req.body;
   try {
     const language = await prisma.language.update({
-      where: { id: req.params.id },
+      where: { id:id },
       data: {
         ...(name !== undefined ? { name } : {}),
         ...(level !== undefined ? { level: normalizeLevel(level) } : {}),
@@ -57,8 +58,9 @@ router.put("/:id", requireAuth, async (req, res) => {
 
 // Admin only - delete
 router.delete("/:id", requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id);
   try {
-    await prisma.language.delete({ where: { id: req.params.id } });
+    await prisma.language.delete({ where: { id:id } });
     res.json({ message: "Deleted" });
   } catch (err) {
     res.status(404).json({ message: "Language not found" });
