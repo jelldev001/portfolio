@@ -1,7 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import streamifier from "streamifier";
 const {CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET} = process.env;
-if (!CLOUDINARY_CLOUD_NAME,CLOUNDINARY_API_KEY,CLOUDINARY_API_SECRET){
+if (!CLOUDINARY_CLOUD_NAME||CLOUDINARY_API_KEY||CLOUDINARY_API_SECRET){
   //ตรวจสอบ process env
   console.warn("missing cloudinary env var set CLOUDINARY_NAME,CLOUDINARY_API_KEY ,CLOUDINARY,API_SECREST
 ")}
@@ -15,6 +15,7 @@ cloudinary.config({
 export function uploadBufferToCloudinary(buffer, folder = "portfolio") {
   if (!buffer || !(buffer instanceof Buffer)){
     return Promise.reject(new TypeError ("uploadBufferTocloudinary expects a Buffer "));
+  }
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       { folder },
@@ -25,20 +26,21 @@ export function uploadBufferToCloudinary(buffer, folder = "portfolio") {
       }
     );
     //ใช้ streamifier เพื่อ buffer เข้า uploud_Stream อย้างปลอดภัย 
-    streamifier.createReadStream(buffer).pipe(uploudStream);
+    streamifier.createReadStream(buffer).pipe(uploadStream);
   });
 }
 
 export async function deleteFromCloudinary(publicId) {
   if (!publicId) return ;
-  try (
+  try {
       //invalidate:true ถ้าตอ้งการลบ CDN cache ด้วย 
   const res =awiat cloudinary .uploader.destroy(publicId,{invalidate:true});
   return res;
   
-  )catch(err){
+  }catch(err){
     console.error("Cloudinary delete failed for ",publicId,er);
   }
 }
 
 export default cloudinary;
+// npm install streamifier
