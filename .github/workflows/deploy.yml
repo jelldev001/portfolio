@@ -91,12 +91,11 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-
+          cd ..
           # ใช้ Vercel CLI deploy แบบ production
           npx vercel deploy --prod \
             --token="$VERCEL_TOKEN" \
             --yes \
-            --cwd="../"
           # --prod = deploy ไป production
           # --yes = ไม่ถามคำถาม (auto-confirm)
           # --token = ใช้ token แทนการ login
