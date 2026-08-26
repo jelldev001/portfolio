@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: cd ../  # ทำงานในโฟลเดอร์ frontend
+        working-directory: frontend  # ทำงานในโฟลเดอร์ frontend
     
     steps:
       - uses: actions/checkout@v4
@@ -91,10 +91,13 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
+
           # ใช้ Vercel CLI deploy แบบ production
           npx vercel deploy --prod \
             --token="$VERCEL_TOKEN" \
-            --yes
+            --yes \
+            --cwd="../"
           # --prod = deploy ไป production
           # --yes = ไม่ถามคำถาม (auto-confirm)
           # --token = ใช้ token แทนการ login
+          
