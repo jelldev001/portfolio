@@ -1,10 +1,10 @@
 import { v2 as cloudinary } from "cloudinary";
 import streamifier from "streamifier";
 const {CLOUDINARY_CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET} = process.env;
-if (!CLOUDINARY_CLOUD_NAME||CLOUDINARY_API_KEY||CLOUDINARY_API_SECRET){
+if (!CLOUDINARY_CLOUD_NAME||!CLOUDINARY_API_KEY||!CLOUDINARY_API_SECRET){
   //ตรวจสอบ process env
-  console.warn("missing cloudinary env var set CLOUDINARY_NAME,CLOUDINARY_API_KEY ,CLOUDINARY,API_SECREST
-")}
+  console.warn("missing cloudinary env var set CLOUDINARY_NAME,CLOUDINARY_API_KEY ,CLOUDINARY,API_SECREST")
+}
 cloudinary.config({
   cloud_name: CLOUDINARY_CLOUD_NAME,
   api_key: CLOUDINARY_API_KEY,
@@ -31,14 +31,13 @@ export function uploadBufferToCloudinary(buffer, folder = "portfolio") {
 }
 
 export async function deleteFromCloudinary(publicId) {
-  if (!publicId) return ;
+  if (!publicId) return;
   try {
-      //invalidate:true ถ้าตอ้งการลบ CDN cache ด้วย 
-  const res =awiat cloudinary .uploader.destroy(publicId,{invalidate:true});
-  return res;
-  
-  }catch(err){
-    console.error("Cloudinary delete failed for ",publicId,er);
+    // invalidate:true ถ้าต้องการลบ CDN cache ด้วย
+    const res = await cloudinary.uploader.destroy(publicId, { invalidate: true });
+    return res;
+  } catch (err) {
+    console.error("Cloudinary delete failed for ", publicId, err);
   }
 }
 
