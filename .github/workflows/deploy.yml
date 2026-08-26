@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: cd ./  # ทำงานในโฟลเดอร์ frontend
+        working-directory: cd ../  # ทำงานในโฟลเดอร์ frontend
     
     steps:
       - uses: actions/checkout@v4
