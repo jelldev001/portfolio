@@ -1,61 +1,102 @@
-name: Deploy
+name: CD - Deploy  # ชื่อ workflow: Deploy อัตโนมัติ
 
+# เงื่อนไขการทำงาน
 on:
   push:
-    branches: [main]
+    branches: [main]  # เมื่อมี push ไปที่ main branch (อัตโนมัติ)
+  workflow_dispatch:  # สามารถรันด้วยมือจาก GitHub Actions UI ได้
 
 jobs:
-  # ---------- ตรวจสอบว่า push นี้แตะโฟลเดอร์ไหนบ้าง ----------
-  detect-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      frontend: ${{ steps.filter.outputs.frontend }}
-      backend: ${{ steps.filter.outputs.backend }}
+  # ============================================
+  # JOB 1: Deploy Backend ไปที่ Render
+  # ============================================
+  deploy-backend:
+    name: Deploy backend to Render
+    runs-on: ubuntu-latest  # ใช้ Ubuntu
+    
     steps:
+      # ดึง code จาก repository
       - uses: actions/checkout@v4
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            frontend:
-              - 'frontend/**'
-            backend:
-              - 'backend/**'
-
-  # ---------- Deploy Frontend ไป Cloudflare Pages ----------
-  deploy-frontend:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.frontend == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
+      
+      # ติดตั้ง Node.js v20
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      
+      # ติดตั้ง dependencies ของ backend
+      - name: Install backend dependencies
+        working-directory: backend  # ทำงานในโฟลเดอร์ backend
+        run: npm ci  # clean install
+        
+      # สร้าง Prisma Client จาก schema
+      - name: Prisma generate
+        working-directory: backend
+        run: npx prisma generate
+      
+      # สั่งให้ Render ทำการ Deploy
+      - name: Trigger Render deploy
+        # ทำงานเฉพาะเมื่อมี API Key และ Service ID (ไม่ใช่ค่าว่าง)
+        if: env.RENDER_API_KEY != '' && env.RENDER_BACKEND_SERVICE_ID != ''
+        env:
+          # รับค่าจาก GitHub Secrets (ปลอดภัย)
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          RENDER_BACKEND_SERVICE_ID: ${{ secrets.RENDER_BACKEND_SERVICE_ID }}
+        run: |
+          # ใช้ curl ส่ง API request ไปที่ Render
+          curl -X POST \
+            -H "Authorization: Bearer ${RENDER_API_KEY}" \
+            -H "Content-Type: application/json" \
+            -d '{"clearCache":"do_not_clear"}' \
+            "https://api.render.com/v1/services/${RENDER_BACKEND_SERVICE_ID}/deploys"
+          # clearCache: do_not_clear = ไม่ล้าง cache (deploy เร็วขึ้น)
 
-      - name: Install dependencies
-        working-directory: frontend
-        run: npm ci
-
-      - name: Build
-        working-directory: frontend
-        run: npm run build
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy frontend/dist --project-name=portfolio
-
-  # ---------- Deploy Backend ไป Render (ผ่าน Deploy Hook) ----------
-  deploy-backend:
-    needs: detect-changes
-    if: needs.detect-changes.outputs.backend == 'true'
+  # ============================================
+  # JOB 2: Deploy Frontend ไปที่ Vercel
+  # ============================================
+  deploy-frontend:
+    name: Build & deploy frontend to Vercel
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend  # ทำงานในโฟลเดอร์ frontend
+    
     steps:
-      - name: Trigger Render Deploy Hook
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      
+      # ติดตั้ง dependencies
+      - name: Install frontend dependencies
+        run: npm ci
+      
+      # สร้าง production bundle (Vite build)
+      - name: Build production bundle
+        run: npm run build
+        env:
+          # ใช้环境变量ในการ build (ต้องมีใน secrets)
+          VITE_BACKEND_ORIGIN: ${{ secrets.VITE_BACKEND_ORIGIN }}
+      
+      # Deploy ไปที่ Vercel
+      - name: Deploy to Vercel
+        # ทำงานเฉพาะเมื่อมี token, org id, และ project id
+        if: env.VERCEL_TOKEN != '' && env.VERCEL_ORG_ID != '' && env.VERCEL_PROJECT_ID != ''
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          cd ..
+          # ใช้ Vercel CLI deploy แบบ production
+          npx vercel deploy --prod \
+            --token="$VERCEL_TOKEN" \
+            --yes \
+          # --prod = deploy ไป production
+          # --yes = ไม่ถามคำถาม (auto-confirm)
+          # --token = ใช้ token แทนการ login
+          
