@@ -1,6 +1,7 @@
 import { Router } from "express";
 import prisma from "../prismaClient.js";
 import { requireAuth } from "../middleware/auth.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 
 const router = Router();
 const VALID_LEVELS = ["basic", "advanced", "expert"];
@@ -15,11 +16,11 @@ function normalizeLevel(level) {
 }
 
 // Public - list all skills
-router.get("/", async (req, res) => {
+router.get("/", asyncHandler(async (req, res) => {
   const skills = await prisma.skill.findMany({ orderBy: { createdAt: "asc" } });
   res.json(skills);
   console.log("skills", skills);
-});
+}));
 
 // Admin only - create
 router.post("/", requireAuth, async (req, res) => {

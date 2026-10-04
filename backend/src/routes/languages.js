@@ -1,6 +1,7 @@
 import { Router } from "express";
 import prisma from "../prismaClient.js";
 import { requireAuth } from "../middleware/auth.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 
 const router = Router();
 const VALID_LEVELS = ["basic", "advanced", "native"];
@@ -14,10 +15,10 @@ function normalizeLevel(level) {
 }
 
 // Public - list all languages
-router.get("/", async (req, res) => {
+router.get("/", asyncHandler(async (req, res) => {
   const languages = await prisma.language.findMany({ orderBy: { createdAt: "asc" } });
   res.json(languages);
-});
+}));
 
 // Admin only - create
 router.post("/", requireAuth, async (req, res) => {

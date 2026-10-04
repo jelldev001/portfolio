@@ -1,15 +1,16 @@
 import { Router } from "express";
 import prisma from "../prismaClient.js";
 import { requireAuth } from "../middleware/auth.js";
+import asyncHandler from "../middleware/asyncHandler.js";
 import upload from "../upload.js";
 import { uploadBufferToCloudinary, deleteFromCloudinary } from "../cloudinary.js";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.get("/", asyncHandler(async (req, res) => {
   const images = await prisma.image.findMany({ orderBy: { createdAt: "asc" } });
   res.json(images);
-});
+}));
 
 router.post("/", requireAuth, upload.single("image"), async (req, res) => {
   if (!req.file) {

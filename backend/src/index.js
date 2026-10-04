@@ -18,6 +18,12 @@ app.use("/api/skills", skillRoutes);
 app.use("/api/languages", languageRoutes);
 app.use("/api/images", imageRoutes);
 
+app.use((err, req, res, next) => {
+  console.error(`Unhandled request error: ${req.method} ${req.originalUrl}`, err);
+  if (res.headersSent) return next(err);
+  res.status(500).json({ message: "Internal server error" });
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`API server running on http://localhost:${PORT}`);
