@@ -7,27 +7,25 @@
 
 ## โครงสร้าง
 ```
-frontend/   # React + Vite (build & deploy ขึ้น Vercel)
+frontend/   # React + Vite (build & deploy ขึ้น Cloudflare Pages)
 backend/    # Node.js + Express (deploy ขึ้น Render)
 .github/workflows/   # GitHub Actions CI/CD
 ```
 
 ## CI/CD (GitHub Actions)
 มี workflow อยู่ใน `.github/workflows/`:
-- **`ci.yml`** — ทุก push/pull-request จะตรวจ build ว่า backend ผ่าน syntax check และ frontend build ไม่ error
-- **`deploy.yml`** — ทุก push ขึ้น `main` จะ build frontend แล้ว deploy ขึ้น Vercel และ trigger deploy backend ขึ้น Render
+- ปัจจุบันยังไม่มี workflow สำหรับตรวจ CI แยกต่างหาก
+- **`deploy.yml`** — ทุก push ขึ้น `main` จะ build frontend แล้ว deploy ขึ้น Cloudflare Pages และ trigger deploy backend ขึ้น Render เมื่อมีการเปลี่ยนไฟล์ในแต่ละโฟลเดอร์
 
 ### Secrets ที่ต้องตั้งใน GitHub (Settings → Secrets and variables → Actions)
 | Secret key | คำอธิบาย |
 |---|---|
-| `VITE_BACKEND_ORIGIN` | URL ของ backend เช่น `https://xxxx.onrender.com` (ใช้ตอน build frontend) |
-| `VERCEL_TOKEN` | Token ของ Vercel CLI |
-| `VERCEL_ORG_ID` | ดูจาก `npx vercel link` → `.vercel/project.json` |
-| `VERCEL_PROJECT_ID` | ดูจาก `npx vercel link` → `.vercel/project.json` |
-| `RENDER_API_KEY` | Render dashboard → Account → API Keys |
-| `RENDER_BACKEND_SERVICE_ID` | ID ของ service (รูปแบบ `srv-...`) |
+| `CLOUDFLARE_API_TOKEN` | API token ที่มีสิทธิ์ deploy Cloudflare Pages |
+| `CLOUDFLARE_ACCOUNT_ID` | Account ID จาก Cloudflare dashboard |
+| `VITE_BACKEND_ORIGIN` | URL ของ backend บน Render เช่น `https://xxxx.onrender.com` (ไม่ต้องมี `/` ปิดท้าย) |
+| `RENDER_DEPLOY_HOOK_URL` | Deploy Hook URL ของ backend service จาก Render dashboard |
 
-> ถ้ายังไม่ตั้ง secrets ตัวไหน workflow ที่เกี่ยวข้องจะถูกข้าม (ใช้ `if:` ตรวจ) แต่ก็แนะนำให้ตั้งให้ครบเพื่อ deploy อัตโนมัติ
+> ตั้ง secrets ทั้งหมดข้างต้นใน GitHub ก่อน push ขึ้น `main`; frontend build ใช้ `VITE_BACKEND_ORIGIN` เพื่อฝัง URL ของ Render API ลงในเว็บ
 
 ## Environment variables
 ค่าจริงใส่ใน `.env` (ห้าม push ขึ้น git — `.gitignore` กันไว้แล้ว) ดูชื่อตัวแปรได้จาก `.env.example`
@@ -36,17 +34,13 @@ backend/    # Node.js + Express (deploy ขึ้น Render)
 - **frontend/.env.example** → `VITE_BACKEND_ORIGIN` (URL ของ backend ที่จะเรียก)
   - สร้าง workflow ที่ "env" ในส่วน frontend ใช้ `VITE_BACKEND_ORIGIN` จาก secret ตอน build
 
-### Deploy ด้วยมือ (local)
+### Deploy ด้วยมือ
 ```bash
-# backend (Render)
-cd backend
-npm install
-npx prisma generate
-npm start
-
-# frontend (Vercel) — ระบุ URL ของ backend ตอน build
+# frontend: build แล้ว deploy โฟลเดอร์ frontend/dist ไป Cloudflare Pages
 cd frontend
-npm install
+npm ci
 VITE_BACKEND_ORIGIN=https://<render-url> npm run build
-npx vercel --prod
+npx wrangler pages deploy dist --project-name=portfolio
 ```
+
+Backend ยังคง deploy บน Render โดย Render ใช้ `backend` เป็น Root Directory และ `npm start` เป็น Start Command
