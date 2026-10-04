@@ -19,6 +19,7 @@ jobs:
           filters: |
             frontend:
               - 'frontend/**'
+              - '.github/workflows/deploy.yml'
             backend:
               - 'backend/**'
 
